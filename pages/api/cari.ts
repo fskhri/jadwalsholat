@@ -44,6 +44,26 @@ export default async function handler(
         return res.status(400).json({ message: "Unknown `kota` data, try another key" })
     }
 
+    const monthNum = parseInt(queryMonth)
+    const yearNum = parseInt(queryYear)
+
+    if (isNaN(monthNum) || monthNum < 1 || monthNum > 12) {
+        return res.status(400).json({ message: "Invalid month. Must be between 1-12" })
+    }
+
+    if (isNaN(yearNum) || yearNum < 2000 || yearNum > 2100) {
+        return res.status(400).json({ message: "Invalid year" })
+    }
+
+    queryMonth = monthNum.toString().padStart(2, '0')
+
+    console.log('Search params:', {
+        provinceId: provinceData.id,
+        cityId: cityData.id,
+        month: queryMonth,
+        year: queryYear
+    })
+
     let listPrayTime = await searchPrayTime(provinceData.id, cityData.id, queryMonth, queryYear)
 
     return res.status(200).json({data: listPrayTime})
